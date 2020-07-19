@@ -19,9 +19,7 @@ const Map = () => {
 
   useEffect(() => {
     parkings.forEach((parking) => {
-      let pos = parking.id;
-      console.log(pos);
-      hours[pos] = 1;
+      hours[parking.id] = 1;
     });
     setHours(hours);
   });
@@ -48,7 +46,7 @@ const Map = () => {
       free: 10,
       coordinate: {
         latitude: 37.78835,
-        longitude: -122.4324,
+        longitude: -122.4354,
       },
     },
     {
@@ -59,8 +57,8 @@ const Map = () => {
       spots: 10,
       free: 5,
       coordinate: {
-        latitude: 37.78845,
-        longitude: -122.4324,
+        latitude: 37.7892,
+        longitude: -122.4394,
       },
     },
     {
@@ -72,7 +70,7 @@ const Map = () => {
       free: 25,
       coordinate: {
         latitude: 37.78855,
-        longitude: -122.4324,
+        longitude: -122.4224,
       },
     },
   ];
@@ -228,16 +226,17 @@ const Map = () => {
     <View style={styles.container}>
       {renderHeader()}
       <MapView
-        style={styles.map}
         initialRegion={{
           latitude: 37.78825,
           longitude: -122.4324,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        style={styles.map}
       >
-        {parkings.forEach((parking) => (
+        {parkings.map((parking) => (
           <Marker
+            key={parking.id}
             title="Teste"
             description="Essa é uma descrição super legal"
             pinColor="#ff2020"
