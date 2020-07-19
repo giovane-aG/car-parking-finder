@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,165 +6,224 @@ import {
   ScrollView,
   Dimensions,
   TouchableWithoutFeedback,
+  Picker,
 } from "react-native";
-import MapView from "react-native-maps";
+
+import MapView, { Marker } from "react-native-maps";
+import { Ionicons } from "@expo/vector-icons";
 
 const { height, width } = Dimensions.get("screen");
 
-const parkings = [
-  {
-    id: 1,
-    title: "Parking 1",
-    price: 5,
-    rating: 4.2,
-    spots: 20,
-    free: 10,
-    location: {
-      lat: 37.78825,
-      lng: -122.4324,
-    },
-  },
-  {
-    id: 2,
-    title: "Parking 2",
-    price: 10,
-    rating: 5,
-    spots: 30,
-    free: 10,
-    location: {
-      lat: 37.78835,
-      lng: -122.4324,
-    },
-  },
-  {
-    id: 3,
-    title: "Parking 3",
-    price: 5,
-    rating: 3,
-    spots: 10,
-    free: 5,
-    location: {
-      lat: 37.78845,
-      lng: -122.4324,
-    },
-  },
-  {
-    id: 4,
-    title: "Parking 4",
-    price: 10,
-    rating: 5,
-    spots: 30,
-    free: 25,
-    location: {
-      lat: 37.78855,
-      lng: -122.4324,
-    },
-  },
-];
+const Map = () => {
+  const [hours, setHours] = useState([]);
 
-const renderHeader = () => {
-  return (
-    <View style={styles.header}>
-      <Text>Header</Text>
-    </View>
-  );
-};
+  useEffect(() => {
+    parkings.forEach((parking) => {
+      let pos = parking.id;
+      console.log(pos);
+      hours[pos] = 1;
+    });
+    setHours(hours);
+  });
 
-const renderParking = (item) => {
-  const [hours, setHours] = useState({});
+  const parkings = [
+    {
+      id: 0,
+      title: "Paid Street Parking",
+      price: 5,
+      rating: 4.2,
+      spots: 20,
+      free: 10,
+      coordinate: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+      },
+    },
+    {
+      id: 1,
+      title: "Parking 2",
+      price: 10,
+      rating: 5,
+      spots: 30,
+      free: 10,
+      coordinate: {
+        latitude: 37.78835,
+        longitude: -122.4324,
+      },
+    },
+    {
+      id: 2,
+      title: "Parking 3",
+      price: 5,
+      rating: 3,
+      spots: 10,
+      free: 5,
+      coordinate: {
+        latitude: 37.78845,
+        longitude: -122.4324,
+      },
+    },
+    {
+      id: 3,
+      title: "Parking 4",
+      price: 10,
+      rating: 5,
+      spots: 30,
+      free: 25,
+      coordinate: {
+        latitude: 37.78855,
+        longitude: -122.4324,
+      },
+    },
+  ];
 
-  return (
-    <View key={`parking-${item.id}`} style={styles.parking}>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-        }}
-      >
-        <Text style={{ fontSize: 16, paddingBottom: 10 }}>
-          x{item.spots} {item.title}
-        </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text
-            style={{
-              fontSize: 16,
-              marginRight: 5,
-              borderWidth: 0.8,
-              borderColor: "gray",
-              borderRadius: 6,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-            }}
-          >
-            05:00
-          </Text>
-          <Text style={{ color: "#aaaaaa", fontSize: 16 }}>hrs</Text>
-        </View>
+  const renderHeader = () => {
+    return (
+      <View style={styles.header}>
+        <Text>Header</Text>
       </View>
+    );
+  };
 
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-        }}
+  const renderParkings = () => {
+    return (
+      <ScrollView
+        horizontal
+        pagingEnabled
+        scrollEnabled
+        centerContent
+        style={styles.parkings}
+        showsHorizontalScrollIndicator={false}
       >
+        {parkings.map((parking) => renderParking(parking))}
+      </ScrollView>
+    );
+  };
+
+  const renderParking = (item) => {
+    const handleHours = (itemValue, itemIndex) => {
+      setHours({ ...hours, [item.id]: itemValue });
+    };
+
+    return (
+      <View key={`parking-${item.id}`} style={styles.parking}>
         <View
           style={{
             flex: 1,
-            justifyContent: "space-around",
+            flexDirection: "column",
           }}
         >
-          <Text>${item.price}</Text>
-          <Text>{item.rating}</Text>
+          <Text
+            style={{
+              fontSize: 13,
+              paddingBottom: 10,
+            }}
+          >
+            x{item.spots} {item.title}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Picker
+              mode="dropdown"
+              selectedValue={hours[item.id]}
+              onValueChange={handleHours}
+              itemStyle={{
+                color: "#000",
+                width: 110,
+              }}
+              style={{
+                width: 110,
+                color: "#000",
+              }}
+            >
+              <Picker.Item label="01:00" value={1} />
+              <Picker.Item label="02:00" value={2} />
+              <Picker.Item label="03:00" value={3} />
+              <Picker.Item label="04:00" value={4} />
+              <Picker.Item label="05:00" value={5} />
+            </Picker>
+
+            <Text style={{ color: "#aaaaaa", fontSize: 16 }}>hrs</Text>
+          </View>
         </View>
 
-        <TouchableWithoutFeedback>
-          <View style={styles.buy}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+          }}
+        >
+          <View
+            style={{
+              // flex: 1,
+              flexDirection: "column",
+              justifyContent: "space-around",
+              paddingTop: 8,
+            }}
+          >
             <View
               style={{
-                flex: 1,
-                justifyContent: "center",
+                flexDirection: "row",
+                justifyContent: "space-around",
               }}
             >
-              <Text style={{ color: "#FFF", fontSize: 25 }}>
-                ${item.price * 4}
-              </Text>
-              <Text style={{ color: "#FFF" }}>
-                ${item.price}x{hours[item.id]} hrs
-              </Text>
+              <Ionicons name="ios-pricetag" size={15} color={"#aaaaaa"} />
+              <Text style={{ paddingRight: 5 }}>${item.price}</Text>
             </View>
             <View
               style={{
-                flex: 0.5,
-                justifyContent: "center",
-                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                marginBottom: 8,
               }}
             >
-              <Text style={{ color: "#FFF", fontSize: 25 }}>></Text>
+              <Ionicons name="ios-star" size={15} color={"#aaaaaa"} />
+              <Text style={{ paddingRight: 5 }}>{item.rating}</Text>
             </View>
           </View>
-        </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback>
+            <View style={styles.buy}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#FFF",
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    paddingLeft: 5,
+                  }}
+                >
+                  ${item.price * 4}
+                </Text>
+                <Text style={{ color: "#FFF", fontSize: 13 }}>
+                  {item.price}x{hours[item.id]} hrs
+                </Text>
+              </View>
+              <View
+                style={{
+                  flex: 0.5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "#FFF", fontSize: 25 }}>></Text>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  };
 
-const renderParkings = () => {
-  return (
-    <ScrollView
-      horizontal
-      pagingEnabled
-      scrollEnabled
-      centerContent
-      style={styles.parkings}
-      showsHorizontalScrollIndicator={false}
-    >
-      {parkings.map((parking) => renderParking(parking))}
-    </ScrollView>
-  );
-};
-
-const Map = () => {
   return (
     <View style={styles.container}>
       {renderHeader()}
@@ -176,7 +235,16 @@ const Map = () => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      />
+      >
+        {parkings.forEach((parking) => (
+          <Marker
+            title="Teste"
+            description="Essa é uma descrição super legal"
+            pinColor="#ff2020"
+            coordinate={parking.coordinate}
+          />
+        ))}
+      </MapView>
       {renderParkings()}
     </View>
   );
@@ -205,19 +273,28 @@ const styles = StyleSheet.create({
   },
   parking: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 24,
+    justifyContent: "space-around",
+    padding: 13,
     borderRadius: 6,
     marginHorizontal: 24,
     width: width - 24 * 2,
-    backgroundColor: "#FFF",
+    backgroundColor: "#fcfcfc",
   },
   buy: {
-    flex: 3,
-    padding: 12,
+    flex: 1.5,
+    padding: 13,
     borderRadius: 6,
     flexDirection: "row",
-    backgroundColor: "red",
+    backgroundColor: "#ff2020",
     justifyContent: "space-between",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
