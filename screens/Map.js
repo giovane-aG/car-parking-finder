@@ -13,6 +13,7 @@ import {
 import Modal from "react-native-modal";
 
 import MapView, { Marker } from "react-native-maps";
+
 import {
   Ionicons,
   AntDesign,
@@ -133,25 +134,19 @@ const Map = () => {
           </Text>
           <View style={styles.parkingStats}>
             <Ionicons name="ios-pricetag" size={15} color="#aaaaaa">
-              <Text style={{ color: "black", fontWeight: "600" }}>
-                {" "}
-                ${activeModal.price}
-              </Text>
+              <Text style={styles.parkingStatsText}> ${activeModal.price}</Text>
             </Ionicons>
             <Ionicons name="ios-star" size={15} color="#aaaaaa">
-              <Text style={{ color: "black", fontWeight: "600" }}>
-                {" "}
-                {activeModal.rating}
-              </Text>
+              <Text style={styles.parkingStatsText}> {activeModal.rating}</Text>
             </Ionicons>
             <Entypo name="location-pin" size={17} color="#aaaaaa">
-              <Text style={{ color: "black", fontWeight: "600" }}>
+              <Text style={styles.parkingStatsText}>
                 {" "}
                 {activeModal.distance}km
               </Text>
             </Entypo>
             <Ionicons name="md-car" size={17} color="#aaaaaa">
-              <Text style={{ color: "black", fontWeight: "600" }}>
+              <Text style={styles.parkingStatsText}>
                 {" "}
                 {activeModal.free}/{activeModal.spots}
               </Text>
@@ -189,18 +184,7 @@ const Map = () => {
               <Text style={{ color: "#aaaaaa" }}> hrs</Text>
             </View>
             <TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  backgroundColor: "#D83C54",
-                  height: 50,
-                  width: width - 24 * 2,
-                  borderRadius: 6,
-                  paddingVertical: 15,
-                  paddingHorizontal: 10,
-                }}
-              >
+              <View style={styles.payBtn}>
                 <Text style={{ fontWeight: "bold", color: "white" }}>
                   Proceed to pay ${hours[activeModal.id] * activeModal.price}
                 </Text>
@@ -527,5 +511,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
     alignItems: "center",
+  },
+  payBtn: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#D83C54",
+    height: 50,
+    width: width - 24 * 2,
+    borderRadius: 6,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+  },
+  parkingStatsText: {
+    color: "black",
+    fontWeight: "600",
   },
 });
