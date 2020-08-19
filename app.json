@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "carParkingFinderApp",
-    "slug": "carParkingFinderApp",
+    "name": "Car Parking Finder",
+    "slug": "car_parking_finder",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#840b15"
+      "backgroundColor": "#ff2020"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,6 +19,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "android": {
+      "package": "com.giovane.carparkingfinder",
+      "versionCode": 1
     }
   }
 }
